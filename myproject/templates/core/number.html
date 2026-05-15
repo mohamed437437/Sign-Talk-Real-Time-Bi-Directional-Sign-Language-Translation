@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Number: {{ num }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+  <h1>🔢 Number: {{ num }}</h1>
+
+  <div class="my-4">
+    <img
+      src="{% static 'images/asl_numbers/' %}{{ num }}.jpg"
+      alt="Sign for {{ num }}"
+      class="img-fluid rounded shadow"
+      style="max-height: 300px;"
+      
+    >
+  </div>
+
+  <div class="my-4">
+    <video controls width="80%" class="rounded shadow">
+      <source src="{% static 'videos/asl_numbers/' %}{{ num }}.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">← Back to Home</a>
+</div>
+{% endblock %}

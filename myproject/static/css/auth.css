@@ -1,0 +1,116 @@
+/* ==================================================
+   🎨 Authentication Pages Styling (Login & Register)
+   ================================================== */
+
+/* تحسين شكل الكارت الأساسي */
+.auth-card {
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08) !important;
+    background-color: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.auth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* تنسيق العناوين */
+.auth-card h2 {
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.5px;
+}
+
+/* تنسيق العناوين فوق الحقول (Labels) */
+.auth-card .form-label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 14.5px;
+    margin-bottom: 8px;
+}
+
+/* تنسيق حقول الإدخال (Inputs) */
+.auth-card input[type="text"],
+.auth-card input[type="email"],
+.auth-card input[type="password"] {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1.5px solid #e2e8f0;
+    background-color: #f8fafc;
+    font-size: 15px;
+    color: #334155;
+    transition: all 0.3s ease;
+}
+
+/* حركة الحقل عند الكتابة عليه (Focus) */
+.auth-card input[type="text"]:focus,
+.auth-card input[type="email"]:focus,
+.auth-card input[type="password"]:focus {
+    border-color: #005A52;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(0, 90, 82, 0.15);
+    outline: none;
+}
+
+/* تنسيق الزرار الأساسي (Login / Register) */
+.auth-card .btn-primary {
+    background-color: #005A52;
+    border-color: #005A52;
+    padding: 14px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    border-radius: 50px !important; /* شكل بيضاوي أنيق */
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+/* حركة الزرار لما الماوس ييجي عليه */
+.auth-card .btn-primary:hover {
+    background-color: #00453e;
+    border-color: #00453e;
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 90, 82, 0.25);
+}
+
+.auth-card .btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* تنسيق الروابط (Forgot password / Login here) */
+.auth-card a {
+    color: #005A52;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.auth-card a:hover {
+    color: #00332e;
+    text-decoration: underline !important;
+}
+
+/* تنسيق رسائل الخطأ */
+.auth-card .alert-danger {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 12px 16px;
+}
+
+.auth-card .text-danger {
+    font-size: 13px;
+    font-weight: 500;
+    color: #ef4444 !important;
+}
+
+/* تنسيق النص الصغير في الأسفل */
+.auth-card .small {
+    color: #64748b;
+    font-size: 14px;
+}

@@ -1,0 +1,400 @@
+/* =========================================
+   1. الإعدادات الأساسية
+========================================= */
+* { box-sizing: border-box; }
+
+body { 
+    background: #f0f2f5; 
+    font-family: system-ui, -apple-system, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+}
+
+/* =========================================
+   2. الحاوية الرئيسية للشات (متجاوبة)
+========================================= */
+.wa-chat {
+    height: 85vh; 
+    width: 100%;
+    max-width: 420px; /* العرض الأقصى للاب توب */
+    margin: 20px auto; 
+    background: #efeae2;
+    border-radius: 18px; 
+    display: flex; 
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12); 
+    overflow: hidden; 
+    position: relative;
+}
+
+/* =========================================
+   3. الهيدر (الشريط العلوي)
+========================================= */
+.wa-header {
+    background: #004d40; 
+    color: #fff; 
+    padding: 10px 15px;
+    display: flex; 
+    flex-direction: column;
+    position: relative; 
+    z-index: 1001;
+}
+
+.header-top {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
+    height: 45px;
+}
+
+.header-left { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    flex: 1; 
+    overflow: hidden; 
+}
+
+.partner-avatar { 
+    width: 42px; 
+    height: 42px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    background: #ddd; 
+    border: 1px solid rgba(255,255,255,0.3); 
+}
+
+.partner-name { 
+    font-weight: bold; 
+    font-size: 16px; 
+    white-space: nowrap; 
+}
+
+.status-offline { 
+    font-size: 12px; 
+    opacity: 0.8; 
+}
+
+.header-right .menu-icon { 
+    cursor: pointer; 
+    font-size: 20px; 
+    padding: 5px; 
+}
+
+/* قائمة الهيدر المنسدلة */
+.header-menu {
+    max-height: 0; 
+    opacity: 0; 
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+.header-menu.show { 
+    max-height: 100px; 
+    opacity: 1; 
+    margin-top: 10px; 
+    padding-top: 10px; 
+    border-top: 1px solid rgba(255,255,255,0.2); 
+}
+.menu-item-btn { 
+    background: transparent; 
+    border: none; 
+    color: white; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    font-size: 14px; 
+    padding: 5px 0; 
+}
+
+/* =========================================
+   4. منطقة الرسائل والفقاعات
+========================================= */
+.wa-messages { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+}
+
+.wa-day { 
+    text-align: center; 
+    font-size: 12px; 
+    color: #555; 
+    background: #e1f3fb; 
+    padding: 5px 12px; 
+    border-radius: 10px; 
+    align-self: center; 
+    margin: 10px 0; 
+}
+
+.bubble { 
+    max-width: 75%; 
+    padding: 8px 12px; 
+    border-radius: 12px; 
+    font-size: 14px; 
+    line-height: 1.4; 
+    position: relative; 
+    word-wrap: break-word; /* لمنع خروج النصوص الطويلة */
+}
+
+.bubble.me { 
+    align-self: flex-end; 
+    background: #d9fdd3; 
+}
+
+.bubble.bot { 
+    align-self: flex-start; 
+    background: #fff; 
+}
+
+.bubble.active {
+    filter: brightness(0.9);
+}
+
+/* إصلاح مشكلة الريكورد في الموبايل */
+.bubble audio {
+    max-width: 100%;
+    min-width: 180px;
+    height: 40px;
+    outline: none;
+}
+.bubble [style*="display: flex"] {
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+/* زر الحذف بجانب الرسالة */
+.delete-msg-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ff3b30;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    z-index: 10;
+}
+.bubble.me .delete-msg-btn { left: -40px; }
+.bubble.bot .delete-msg-btn { right: -40px; }
+.bubble.active .delete-msg-btn { opacity: 1; visibility: visible; }
+
+/* =========================================
+   5. شريط الإدخال وقائمة الملحقات
+========================================= */
+.whatsapp-input-pill {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 24px;
+    padding: 5px 10px;
+    margin: 10px;
+    gap: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+}
+
+.wa-icon-btn {
+    background: transparent;
+    border: none;
+    color: #54656f;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    outline: none;
+}
+
+.wa-msg-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    color: #111b21;
+    font-size: 15px;
+    padding: 8px 5px;
+    outline: none;
+}
+
+#sendBtn { color: #00a884; }
+
+.attach-menu {
+    position: absolute; 
+    bottom: 65px; 
+    left: 15px; 
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+    padding: 10px; 
+    z-index: 2000;
+}
+
+/* =========================================
+   6. الكاميرا (التصميم الاحترافي)
+========================================= */
+#cameraContainer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#preview {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* الشريط العلوي للكاميرا */
+.cam-top-bar {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    z-index: 3001;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+}
+
+.cam-control-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s ease;
+    outline: none;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    backdrop-filter: blur(5px);
+}
+.close-btn:hover { background: rgba(255, 59, 48, 0.8); }
+.switch-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+/* الشريط السفلي للكاميرا */
+.cam-bottom-bar {
+    height: 110px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    z-index: 3001;
+}
+
+.record-btn {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: #f44336;
+    border: 4px solid #fff;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.3);
+    outline: none;
+}
+.record-btn:active { transform: scale(0.92); }
+
+.stop-btn {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #f44336;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    transition: transform 0.15s ease;
+}
+.stop-btn::after {
+    content: '';
+    width: 22px;
+    height: 22px;
+    background: #f44336;
+    border-radius: 4px;
+}
+.stop-btn:active { transform: scale(0.92); }
+
+.timer-display {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(244, 67, 54, 0.85);
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   7. كلاسات عامة (Utility)
+========================================= */
+.d-none { display: none !important; }
+
+/* =========================================
+   8. التجاوب مع الموبايل (Media Queries)
+========================================= */
+@media screen and (max-width: 480px) {
+    body {
+        background: #efeae2; /* توحيد لون الخلفية مع الشات */
+    }
+    
+    .wa-chat {
+        height: 100vh;      /* الشات يأخذ كامل طول الشاشة */
+        width: 100vw;       /* الشات يأخذ كامل عرض الشاشة */
+        max-width: 100%;
+        margin: 0;          /* إزالة أي هوامش خارجية */
+        border-radius: 0;   /* إزالة الحواف الدائرية ليصبح مثل التطبيق */
+    }
+
+    .container {
+        padding: 0 !important; /* إزالة الـ padding الخاص بإطار البوتستراب لو موجود */
+    }
+    
+    /* تصغير طفيف للزراير العلوية للكاميرا لتناسب شاشات الموبايل الصغيرة */
+    .cam-control-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+    
+    .cam-top-bar {
+        padding: 15px;
+    }
+}

@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About | Sign Talk{% endblock %}
+
+{% block content %}
+<style>
+    /* ==================================================
+       🎨 About Page Styling
+       ================================================== */
+    .about-hero {
+        background: linear-gradient(135deg, #005A52 0%, #00332e 100%);
+        color: white;
+        border-radius: 24px;
+        padding: 60px 20px;
+        margin-bottom: 50px;
+        box-shadow: 0 15px 30px rgba(0, 90, 82, 0.15);
+    }
+
+    .feature-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 20px;
+        padding: 40px 20px; /* تزويد الـ padding شوية لراحة العين */
+        height: 100%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    /* 🔥 تنسيق الأيقونات الجديد ليطابق الصورة 🔥 */
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background-color: #eef2f6; /* لون رمادي فاتح مريح */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin: 0 auto 25px auto;
+    }
+
+    .team-card {
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 90, 82, 0.1);
+    }
+
+    .team-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 30px auto 15px auto;
+        border: 4px solid rgba(0, 90, 82, 0.15);
+        padding: 4px;
+        background-color: #fff;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .team-card:hover .team-avatar {
+        transform: scale(1.05);
+        border-color: #005A52;
+    }
+
+    .tech-badge {
+        background-color: #e2e8f0;
+        color: #334155;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        margin: 3px;
+        display: inline-block;
+    }
+
+    .section-title {
+        color: #005A52;
+        font-weight: 800;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 40px;
+    }
+</style>
+
+<div class="container py-4">
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="about-hero text-center text-md-start">
+                <div class="row align-items-center">
+                    <div class="col-md-8 mx-auto text-center">
+                        <span class="badge bg-light text-dark mb-3 px-3 py-2 rounded-pill fw-bold">Graduation Project | KSIU</span>
+                        <h1 class="display-5 fw-bold mb-3">Sign Talk</h1>
+                        <p class="lead mb-0 opacity-75">
+                            Breaking the silence. Bridging the gap between the Deaf community and the hearing world through advanced real-time AI.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5 align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h2 class="fw-bold mb-4" style="color: #1e293b;">Empowering Communication</h2>
+            <p class="text-muted fs-5 line-height-lg">
+                Sign Talk is not just a translation tool; it’s a fully integrated digital bridge. Whether you are typing, speaking, or signing, our platform ensures seamless two-way communication in seconds.
+            </p>
+            <p class="text-muted mt-3">
+                Built with a state-of-the-art hybrid AI architecture, our core engine utilizes <strong>SlowFast</strong> for deep video understanding, supported by <strong>MediaPipe</strong> for precise dynamic hand cropping and ROI-guided attention. This ensures high-accuracy recognition even at 60 FPS.
+            </p>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+            <div class="p-4 bg-light rounded-4 shadow-sm border-start border-5 border-success">
+                <h5 class="fw-bold text-dark mb-3">Core Technologies</h5>
+                <div>
+                    <span class="tech-badge">Python</span>
+                    <span class="tech-badge">Django</span>
+                    <span class="tech-badge">SlowFast</span>
+                    <span class="tech-badge">MediaPipe</span>
+                    <span class="tech-badge">Computer Vision</span>
+                    <span class="tech-badge">WebSockets</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        
+        <div class="col-md-4 text-center">
+            <div class="feature-card">
+                <div class="feature-icon">⌨️</div>
+                <h4 class="fw-bold">Text to Sign</h4>
+                <p class="text-muted mt-3">
+                    Type your sentence and our intelligent agent instantly animates our <strong>3D Avatar</strong> to perform the text in accurate sign language.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="feature-card">
+                <div class="feature-icon">🎙️</div>
+                <h4 class="fw-bold">Voice to Sign</h4>
+                <p class="text-muted mt-3">
+                    Speak naturally. Our AI transcribes your voice in real-time and makes the <strong>Smart Avatar</strong> translate the audio directly into sign movements.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="feature-card">
+                <div class="feature-icon">🎥</div>
+                <h4 class="fw-bold">Sign to Text</h4>
+                <p class="text-muted mt-3">
+                    Using just a web camera, our hybrid AI analyzes hand gestures frame-by-frame and translates them into readable text for hearing people.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-5 pt-4">
+        <div class="col-12 text-center">
+            <h2 class="section-title">Meet The Core Team</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center g-4 mb-5">
+        
+        <div class="col-md-5 col-lg-4">
+            <div class="team-card text-center pb-4">
+                <img src="https://ui-avatars.com/api/?name=Kareem+Ahmed&background=005A52&color=fff&size=200&font-size=0.4" alt="Kareem Ahmed" class="team-avatar shadow-sm">
+                
+                <h4 class="fw-bold mb-1">Kareem Ahmed</h4>
+                <p class="text-success fw-semibold mb-3">Lead AI Engineer</p>
+                <p class="text-muted px-4 small">
+                    Specialized in Deep Learning and Computer Vision. Architect of the hybrid SlowFast & MediaPipe models driving the real-time sign recognition engine.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-5 col-lg-4">
+            <div class="team-card text-center pb-4">
+                <img src="https://ui-avatars.com/api/?name=Mohamed+Ali&background=005A52&color=fff&size=200&font-size=0.4" alt="Mohamed Ali" class="team-avatar shadow-sm">
+                
+                <h4 class="fw-bold mb-1">Mohamed Ali</h4>
+                <p class="text-success fw-semibold mb-3">Lead Software Engineer</p>
+                <p class="text-muted px-4 small">
+                    Full-Stack developer and system architect. Responsible for building the scalable Django backend, WebSocket infrastructure, and the seamless user interface.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-5 pt-4 border-top text-muted">
+        <small>&copy; 2026 Sign Talk — Developed at King Salman International University (KSIU).</small>
+    </div>
+
+</div>
+{% endblock %}

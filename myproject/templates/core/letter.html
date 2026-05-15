@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Letter: {{ letter }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+  <h1>🔤 Letter: {{ letter }}</h1>
+
+  <!-- صورة الحرف -->
+  <div class="my-4">
+    <img
+      src="{% static 'images/asl_letters/' %}{{ letter }}.jpg"
+      alt="Sign for {{ letter }}"
+      class="img-fluid rounded shadow"
+      style="max-height: 300px;"
+     
+    >
+  </div>
+
+  <!-- فيديو الحرف -->
+  <div class="my-4">
+    <video controls width="80%" class="rounded shadow">
+      <source src="{% static 'videos/asl_letters/' %}{{ letter }}.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">← Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Chats{% endblock %}
+
+{% block content %}
+
+<style>
+    /* --- تنسيقات الكارت والقائمة --- */
+    .chat-list-card {
+        border-radius: 16px;
+        overflow: hidden;
+        background-color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        min-height: 400px;
+    }
+
+    /* --- زر تبديل الأرشيف --- */
+    .archive-toggle-btn {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        color: #555;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .archive-toggle-btn:hover { background-color: #e2e6ea; }
+    .archive-toggle-btn.active { background-color: #005A52; color: #fff; border-color: #005A52; }
+
+    /* --- نظام السحب (Swipe) --- */
+    .swipe-container {
+        position: relative;
+        overflow: hidden; 
+        border-bottom: 1px solid #f0f0f0;
+        cursor: grab;
+    }
+    
+    .swipe-container:active { cursor: grabbing; }
+    .swipe-container:last-child { border-bottom: none; }
+
+    .swipe-background {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; justify-content: space-between; align-items: center;
+        z-index: 0;
+    }
+
+    .swipe-action {
+        width: 100px; height: 100%;
+        display: flex; align-items: center;
+        color: white; font-weight: bold; font-size: 14px;
+        transition: background-color 0.3s;
+    }
+    
+    .action-delete { background-color: #ff3b30; justify-content: flex-start; padding-left: 20px; }
+    .action-archive { background-color: #007aff; justify-content: flex-end; padding-right: 20px; }
+
+    .swipe-content {
+        position: relative; z-index: 1; background-color: #ffffff;
+        padding: 12px 15px; display: flex; align-items: center;
+        transition: transform 0.2s ease-out; width: 100%;
+        touch-action: pan-y;
+    }
+
+    .chat-link {
+        text-decoration: none; color: inherit; display: flex;
+        align-items: center; flex-grow: 1; pointer-events: auto;
+        user-select: none; -webkit-user-drag: none;
+    }
+
+    /* --- تنسيق الأفاتار واللمبة --- */
+    .avatar-wrapper { position: relative; margin-right: 15px; flex-shrink: 0; }
+    .chat-avatar-img {
+        width: 50px; height: 50px; border-radius: 50%; object-fit: cover;
+        border: 1px solid rgba(0,0,0,0.1); background-color: #eee; pointer-events: none;
+    }
+
+    .status-dot {
+        width: 13px; height: 13px; background-color: #bbb;
+        border: 2px solid #fff; border-radius: 50%;
+        position: absolute; bottom: 2px; right: 2px; transition: background-color 0.3s;
+    }
+    .status-dot.online { background-color: #2ecc71; }
+
+    /* --- معلومات المستخدم --- */
+    .user-info { display: flex; flex-direction: column; }
+    .user-name { font-weight: 600; font-size: 16px; color: #333; margin-bottom: 2px; }
+    .user-status-text { font-size: 13px; color: #888; }
+
+    /* --- البحث --- */
+    .search-container { position: relative; margin-bottom: 20px; }
+    .search-input {
+        width: 100%; padding: 12px 15px 12px 45px; border-radius: 25px;
+        border: 1px solid #ddd; background-color: #f9f9f9; outline: none; transition: 0.3s;
+    }
+    .search-input:focus { background-color: #fff; border-color: #005A52; box-shadow: 0 0 0 3px rgba(0,90,82,0.1); }
+    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; }
+    .no-results { display: none; text-align: center; padding: 40px; color: #777; }
+</style>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0 fw-bold text-dark">Chats</h4>
+        <button id="toggleArchiveBtn" class="archive-toggle-btn">
+            📦 Archived
+        </button>
+      </div>
+
+      <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search for a username...">
+      </div>
+
+      <div class="card chat-list-card">
+        
+        <div id="usersListContainer">
+            {% for user in users %}
+            <div class="swipe-container" data-name="{{ user.username|lower }}" data-user-id="{{ user.id }}">
+                
+                <div class="swipe-background">
+                    <div class="swipe-action action-delete">🗑️ Delete</div>
+                    <div class="swipe-action action-archive"><span class="archive-text">📦 Archive</span></div>
+                </div>
+
+                <div class="swipe-content">
+                    <a href="{% url 'chat:chat' user.id %}" class="chat-link">
+                        <div class="avatar-wrapper">
+                            <img src="{% if user.chat_profile.profile_image %}{{ user.chat_profile.profile_image.url }}{% else %}{% static 'img/default.png' %}{% endif %}" 
+                                 class="chat-avatar-img" alt="{{ user.username }}"
+                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ user.username }}&background=random';">
+                            
+                            <span id="status-dot-{{ user.id }}" class="status-dot {% if user.chat_profile.is_online %}online{% endif %}"></span>
+                        </div>
+
+                        <div class="user-info">
+                            <div class="user-name">{{ user.username|title }}</div>
+                            <div class="user-status-text">Swipe right to delete, left to archive</div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            {% empty %}
+            <div class="p-5 text-center text-muted">
+                <div class="fs-1 mb-2">📭</div>
+                No users available at the moment.
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="noResultsMsg" class="no-results">
+            <div class="fs-2">😕</div>
+            <p class="mt-2" id="noResultsText">No user found.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+    // 1. إدارة الأرشيف (Local Storage)
+    let isShowingArchived = false;
+    const toggleArchiveBtn = document.getElementById('toggleArchiveBtn');
+    const searchInput = document.getElementById('searchInput');
+    const noResultsMsg = document.getElementById('noResultsMsg');
+    const noResultsText = document.getElementById('noResultsText');
+
+    // جلب الأرشيف من المتصفح وتطبيقه عند تحميل الصفحة
+    const getArchivedIds = () => JSON.parse(localStorage.getItem('archivedChats') || '[]');
+    
+    function initArchiveState() {
+        const archivedIds = getArchivedIds();
+        document.querySelectorAll('.swipe-container').forEach(container => {
+            const userId = container.dataset.userId;
+            const archiveAction = container.querySelector('.action-archive');
+            const archiveText = container.querySelector('.archive-text');
+
+            if (archivedIds.includes(userId)) {
+                container.classList.add('is-archived');
+                archiveText.innerText = "📤 Unarchive";
+                archiveAction.style.backgroundColor = "#2ecc71"; // لون أخضر للإلغاء
+            } else {
+                container.classList.remove('is-archived');
+                archiveText.innerText = "📦 Archive";
+                archiveAction.style.backgroundColor = "#007aff"; // لون أزرق للأرشفة
+            }
+        });
+        filterChats(); // فلترة بناءً على الحالة
+    }
+
+    // فلترة وعرض الشاتات
+    function filterChats() {
+        const query = searchInput.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('.swipe-container');
+        let hasResults = false;
+        let totalInMode = 0;
+
+        rows.forEach(row => {
+            const name = row.getAttribute('data-name');
+            const isArchived = row.classList.contains('is-archived');
+            const matchesMode = isShowingArchived ? isArchived : !isArchived;
+
+            if (matchesMode) totalInMode++;
+
+            if (name.includes(query) && matchesMode) {
+                row.style.display = "block";
+                hasResults = true;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        if (!hasResults) {
+            noResultsMsg.style.display = "block";
+            noResultsText.innerText = totalInMode === 0 
+                ? (isShowingArchived ? "Archive is empty." : "No active chats.") 
+                : "No user found with this name.";
+        } else {
+            noResultsMsg.style.display = "none";
+        }
+    }
+
+    // زر تبديل العرض (عادي / أرشيف)
+    toggleArchiveBtn.addEventListener('click', () => {
+        isShowingArchived = !isShowingArchived;
+        if (isShowingArchived) {
+            toggleArchiveBtn.classList.add('active');
+            toggleArchiveBtn.innerHTML = "💬 Active Chats";
+        } else {
+            toggleArchiveBtn.classList.remove('active');
+            toggleArchiveBtn.innerHTML = "📦 Archived";
+        }
+        searchInput.value = ''; // تفريغ البحث
+        filterChats();
+    });
+
+    searchInput.addEventListener('keyup', filterChats);
+
+    // 2. Swipe Logic (سحب يمين وشمال)
+    document.querySelectorAll('.swipe-container').forEach(container => {
+        const content = container.querySelector('.swipe-content');
+        const link = container.querySelector('.chat-link');
+        let startX = 0, currentX = 0, isDragging = false, isMoved = false;
+        const swipeThreshold = 80;
+
+        const startDrag = (x) => { startX = x; isDragging = true; isMoved = false; content.style.transition = 'none'; };
+        const onDrag = (x) => {
+            if (!isDragging) return;
+            currentX = x - startX;
+            if (Math.abs(currentX) > 5) isMoved = true;
+            let moveX = currentX;
+            if (moveX > 120) moveX = 120 + (moveX - 120) * 0.2;
+            if (moveX < -120) moveX = -120 + (moveX + 120) * 0.2;
+            content.style.transform = `translateX(${moveX}px)`;
+        };
+        const endDrag = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            content.style.transition = 'transform 0.3s ease-out';
+
+            if (currentX > swipeThreshold) {
+                // سحب يمين (حذف)
+                content.style.transform = `translateX(100vw)`;
+                deleteChat(container.dataset.userId, container);
+            } else if (currentX < -swipeThreshold) {
+                // سحب شمال (أرشفة أو فك أرشفة)
+                content.style.transform = `translateX(-100vw)`;
+                toggleArchiveStatus(container.dataset.userId, container);
+            } else {
+                content.style.transform = `translateX(0)`; // رجوع
+            }
+            currentX = 0;
+        };
+
+        content.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
+        content.addEventListener('touchmove', e => onDrag(e.touches[0].clientX));
+        content.addEventListener('touchend', endDrag);
+
+        content.addEventListener('mousedown', e => startDrag(e.clientX));
+        window.addEventListener('mousemove', e => onDrag(e.clientX));
+        window.addEventListener('mouseup', endDrag);
+
+        link.addEventListener('click', e => { if (isMoved) { e.preventDefault(); isMoved = false; } });
+    });
+
+    // 3. Delete Logic
+    async function deleteChat(userId, containerElement) {
+        if(!confirm("Are you sure you want to delete this conversation?")) {
+            containerElement.querySelector('.swipe-content').style.transform = `translateX(0)`;
+            return;
+        }
+        const csrfToken = "{{ csrf_token }}"; 
+        try {
+            const response = await fetch(`/chat/${userId}/clear/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                // لو كان متأرشف، نحذفه من الأرشيف كمان
+                let archived = getArchivedIds();
+                localStorage.setItem('archivedChats', JSON.stringify(archived.filter(id => id !== userId)));
+                
+                containerElement.style.transition = "all 0.3s";
+                containerElement.style.height = "0";
+                containerElement.style.opacity = "0";
+                setTimeout(() => { containerElement.remove(); filterChats(); }, 300);
+            } else {
+                alert("❌ Failed to delete.");
+                containerElement.querySelector('.swipe-content').style.transform = `translateX(0)`;
+            }
+        } catch (error) {
+            console.error(error);
+            containerElement.querySelector('.swipe-content').style.transform = `translateX(0)`;
+        }
+    }
+
+    // 4. دالة الأرشفة (إضافة أو إزالة)
+    function toggleArchiveStatus(userId, containerElement) {
+        let archived = getArchivedIds();
+        const isCurrentlyArchived = archived.includes(userId);
+
+        if (isCurrentlyArchived) {
+            // Unarchive (فك الأرشفة)
+            archived = archived.filter(id => id !== userId);
+        } else {
+            // Archive (أرشفة)
+            archived.push(userId);
+        }
+        
+        localStorage.setItem('archivedChats', JSON.stringify(archived));
+
+        // إخفاء الشات بنعومة وبعدين تحديث حالته
+        containerElement.style.transition = "all 0.3s";
+        containerElement.style.opacity = "0";
+        containerElement.style.transform = "scaleY(0.5)";
+        
+        setTimeout(() => {
+            initArchiveState(); // بتحدث الكلاسات والألوان وترجع المحتوى لمكانه
+            containerElement.style.opacity = "1";
+            containerElement.style.transform = "scaleY(1)";
+            containerElement.querySelector('.swipe-content').style.transform = `translateX(0)`;
+        }, 300);
+    }
+
+    // 5. Presence WebSocket Logic
+    const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const presenceSocket = new WebSocket(wsProtocol + window.location.host + "/ws/presence/");
+    presenceSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.type === 'user_status') {
+            const statusDot = document.getElementById(`status-dot-${data.user_id}`);
+            if (statusDot) {
+                if (data.status === 'online') statusDot.classList.add('online');
+                else statusDot.classList.remove('online');
+            }
+        }
+    };
+
+    // تشغيل الإعدادات أول ما الصفحة تفتح
+    document.addEventListener("DOMContentLoaded", initArchiveState);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Phrase: {{ phrase }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+  <h1>💬 Phrase: {{ phrase }}</h1>
+
+  <img
+    src="{% static 'images/asl_phrases/' %}{{ phrase|slugify }}.jpg"
+    alt="Sign for {{ phrase }}"
+    class="img-fluid rounded shadow mb-3"
+    style="max-height: 200px;"
+    
+  >
+
+  <video controls width="80%" class="rounded shadow" style="max-height: 300px;">
+    <source src="{% static 'videos/asl_phrases/' %}{{ phrase|slugify }}.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="mt-4">
+    <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">← Back to Home</a>
+  </div>
+</div>
+{% endblock %}

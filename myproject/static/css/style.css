@@ -1,0 +1,222 @@
+/* =========================================
+   1. General Styles & Variables
+   ========================================= */
+:root {
+    --primary-color: #005A52;       /* اللون الأخضر الأساسي */
+    --primary-hover: #004540;       /* لون الأخضر عند الضغط */
+    --bg-color: #f4f6f9;            /* لون خلفية الصفحة فاتح جداً */
+    --text-color: #333333;          /* لون النصوص */
+    --card-bg: #ffffff;             /* لون الكروت */
+    --input-bg: #f8f9fa;            /* لون خلفية حقول الإدخال */
+    --border-radius: 12px;          /* درجة انحناء الحواف */
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* ظل ناعم */
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    min-height: 100vh;
+}
+
+/* تحسين الروابط */
+a {
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* =========================================
+   2. Card Styling (Auth & Profile)
+   ========================================= */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    background-color: var(--card-bg);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+/* تأثير بسيط عند مرور الماوس على الكارت */
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* تنسيق خاص لكروت المصادقة (Login/Register) */
+.auth-card {
+    border-top: 5px solid var(--primary-color); /* خط علوي ملون */
+}
+
+.card-body {
+    padding: 2.5rem !important; /* زيادة المساحة الداخلية */
+}
+
+/* العناوين داخل الكروت */
+h2.h3, h2.h4 {
+    color: var(--primary-color);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+/* =========================================
+   3. Form Elements (Inputs & Labels) - احترافي
+   ========================================= */
+
+/* تنسيق الحاوية الخاصة بكل حقل لضمان التباعد */
+.mb-3, .mb-4 {
+    margin-bottom: 1.25rem !important; /* مسافة جيدة بين الحقول */
+}
+
+/* تنسيق الليبل (الاسم فوق الحقل) */
+.form-label {
+    display: block; /* لضمان أنه يأخذ سطراً وحده */
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #444;       /* لون رمادي غامق */
+    margin-bottom: 0.5rem;
+    text-align: left;  /* محاذاة لليسار دائماً */
+}
+
+/* تنسيق حقل الإدخال نفسه */
+.form-control {
+    display: block;
+    width: 100%;       /* يضمن أن الحقل يملأ عرض الكارت بالكامل */
+    height: 50px;      /* ارتفاع ثابت ومريح للضغط */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #333;
+    background-color: #f9f9f9; /* خلفية رمادية فاتحة جداً */
+    background-clip: padding-box;
+    border: 2px solid #eee;    /* حدود ناعمة جداً */
+    border-radius: 10px;       /* حواف دائرية */
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;    /* مهم جداً لضبط العرض */
+}
+
+/* عند الضغط داخل الحقل (Focus) */
+.form-control:focus {
+    color: #333;
+    background-color: #fff;
+    border-color: var(--primary-color); /* اللون الأخضر */
+    outline: 0;
+    box-shadow: 0 0 0 4px rgba(0, 90, 82, 0.1); /* وهج أخضر ناعم حول الحقل */
+}
+
+/* حل مشكلة الخلفية الزرقاء عند التعبئة التلقائية (Autofill) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #333 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* تنسيق النصوص المساعدة تحت الحقل */
+.form-text {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 5px;
+    text-align: left;
+}
+/* =========================================
+   4. Buttons Styling
+   ========================================= */
+/* الزر الأساسي */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 50px; /* شكل كبسولة */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 90, 82, 0.3);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    box-shadow: 0 6px 20px rgba(0, 90, 82, 0.4);
+    transform: translateY(-2px);
+}
+
+/* زر النجاح (مثل تأكيد الباسورد) */
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 24px;
+}
+
+/* الأزرار الثانوية (Outline) */
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+/* =========================================
+   5. Profile Page Specifics
+   ========================================= */
+/* صورة البروفايل */
+img.rounded-circle {
+    border: 4px solid #fff; /* إطار أبيض حول الصورة */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+/* تكبير الصورة قليلاً عند الوقوف عليها */
+img.rounded-circle:hover {
+    transform: scale(1.05);
+}
+
+/* =========================================
+   6. Alerts & Messages
+   ========================================= */
+.alert {
+    border-radius: 10px;
+    border: none;
+    font-size: 0.95rem;
+}
+
+.alert-danger {
+    background-color: #ffebee;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-left: 4px solid #2e7d32;
+}
+
+/* =========================================
+   7. Responsive Adjustments
+   ========================================= */
+@media (max-width: 576px) {
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    h2.h3 {
+        font-size: 1.5rem;
+    }
+}

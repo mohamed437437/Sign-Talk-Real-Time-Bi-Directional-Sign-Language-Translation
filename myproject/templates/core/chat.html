@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}SignTalk Chat{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+
+<div class="container py-3">
+  <div class="wa-chat">
+
+    <div class="wa-header" id="chatHeader">
+      <div class="header-top">
+        <div class="header-left">
+          <img src="{% if other_user.user_profile.profile_image %}{{ other_user.user_profile.profile_image.url }}{% else %}{% static 'img/default.png' %}{% endif %}" 
+               class="partner-avatar"
+               onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ other_user.username }}&background=random';">
+          
+          <div class="title-container">
+            <div class="partner-name">{{ other_user.username|title }}</div>
+            <small id="userStatus" class="status-offline">Offline</small>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <span id="menuBtn" class="menu-icon">⋮</span>
+        </div>
+      </div>
+
+      <div id="menuBox" class="header-menu">
+        <button id="clearChat" class="menu-item-btn">
+          <span>🗑️</span> Clear Chat
+        </button>
+      </div>
+    </div>
+
+    <div id="cameraContainer" class="d-none">
+      <div class="cam-top-bar">
+        <button id="closeCamBtn" class="cam-control-btn close-btn">✕</button>
+        <button id="switchCamBtn" class="cam-control-btn switch-btn">🔄</button>
+      </div>
+      
+      <video id="preview" autoplay muted playsinline></video>
+      
+      <div class="cam-bottom-bar">
+        <div id="timer" class="timer-display d-none">00:00</div>
+        <button id="startRecordBtn" class="record-btn"></button>
+        <button id="stopRecordBtn" type="button" class="stop-btn d-none"></button>
+      </div>
+    </div>
+
+    <div id="waMessages" class="wa-messages">
+      <div class="wa-day">Today</div>
+    </div>
+
+    <div class="whatsapp-input-pill">
+      
+      <div class="attach-container" style="position: relative; display: flex; align-items: center;">
+        <button id="plusBtn" class="wa-icon-btn" title="Attach">
+          <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </button>
+        
+        <div id="attachMenu" class="attach-menu d-none" style="position: absolute; bottom: 50px; left: 0; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); padding: 10px; display: flex; flex-direction: column; gap: 15px; width: 140px; z-index: 100;">
+          <div id="uploadAction" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px; color: #333; font-weight: 500;">
+            <span style="font-size: 18px;">📁</span> Send file
+          </div>
+          <div id="cameraAction" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px; color: #333; font-weight: 500;">
+            <span style="font-size: 18px;">📷</span> Camera
+          </div>
+        </div>
+      </div>
+      
+      <input id="fileInput" type="file" accept="image/*" class="d-none">
+
+      <input type="text" id="msgBox" class="wa-msg-input" placeholder="Type a message" autocomplete="off">
+
+      <button id="micBtn" class="wa-icon-btn" title="Voice Note">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.349 8.469 4.35v7.061c0 2.001 1.53 3.531 3.53 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.884h2.354v-3.884c3.884-.588 7.061-3.884 7.061-7.885h-2.002z"/></svg>
+      </button>
+
+      <button id="sendBtn" class="wa-icon-btn d-none" title="Send">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M1.101 21.5L23.6 12 1.101 2.5 1.1 10l16.2 2-16.2 2z"/></svg>
+      </button>
+    </div> 
+  </div> 
+</div> 
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+  const OTHER_USER_ID = "{{ other_user.id }}"; 
+  const CURRENT_USER_ID = "{{ request.user.id }}";
+  const CSRF = "{{ csrf_token }}";
+</script>
+<script id="initial-messages" type="application/json">{{ messages_json|safe }}</script>
+
+<script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/chat.js' %}"></script>
+<script src="{% static 'js/camera_new.js' %}"></script>
+<script src="{% static 'js/chat-main.js' %}"></script>
+{% endblock %}

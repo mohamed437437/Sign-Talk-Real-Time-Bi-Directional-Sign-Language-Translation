@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Welcome | Sign Talk{% endblock %}
+
+{% block content %}
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+<style>
+    /* ==================================================
+       🚀 1. The Gateway (Hero Section) Styling
+       ================================================== */
+    .gateway-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #011b18 0%, #005A52 100%);
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
+        margin: 20px 0;
+        box-shadow: 0 20px 50px rgba(0, 90, 82, 0.25);
+    }
+
+    .bg-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.03);
+    }
+    .shape-1 { width: 400px; height: 400px; top: -150px; left: -100px; }
+    .shape-2 { width: 600px; height: 600px; bottom: -200px; right: -150px; }
+    .shape-3 { width: 200px; height: 200px; top: 40%; left: 60%; background: rgba(0, 169, 145, 0.05); }
+
+    .gateway-content {
+        position: relative;
+        z-index: 10;
+        color: #ffffff;
+        text-align: center;
+        padding: 40px;
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .typing-container {
+        display: inline-block;
+        min-height: 70px;
+        margin-bottom: 20px;
+    }
+
+    .typing-text {
+        font-size: 3.5rem;
+        font-weight: 800;
+        border-right: 4px solid #00A991; 
+        white-space: normal;
+        padding-right: 8px;
+        animation: blinkCursor 0.75s step-end infinite;
+        text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    @keyframes blinkCursor {
+        from, to { border-color: transparent }
+        50% { border-color: #00A991; }
+    }
+
+    .subtitle {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 40px;
+        line-height: 1.7;
+        font-weight: 400;
+    }
+
+    /* أزرار الدخول */
+    .btn-glow {
+        padding: 16px 45px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        letter-spacing: 0.5px;
+        transition: all 0.4s ease;
+    }
+
+    .btn-primary-glow {
+        background-color: #00A991;
+        color: #fff;
+        border: none;
+        box-shadow: 0 0 20px rgba(0, 169, 145, 0.4);
+    }
+
+    .btn-primary-glow:hover {
+        background-color: #00d4b5;
+        box-shadow: 0 0 30px rgba(0, 169, 145, 0.7);
+        transform: translateY(-4px);
+        color: #fff;
+    }
+
+    .btn-outline-glow {
+        background-color: transparent;
+        color: #fff;
+        border: 2px solid #00A991;
+    }
+
+    .btn-outline-glow:hover {
+        background-color: rgba(0, 169, 145, 0.15);
+        border-color: #00d4b5;
+        transform: translateY(-4px);
+        color: #fff;
+    }
+
+    .fade-in-delay-1 { opacity: 0; animation: fadeInUp 1s ease forwards 2s; }
+    .fade-in-delay-2 { opacity: 0; animation: fadeInUp 1s ease forwards 2.5s; }
+
+    /* ==================================================
+       🎥 2. ASL Gestures Showcase Section
+       ================================================== */
+    .showcase-section {
+        padding: 80px 0;
+    }
+
+    .showcase-title {
+        color: #005A52;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 60px;
+        text-align: center;
+    }
+
+    .showcase-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .showcase-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0, 90, 82, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .showcase-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0, 90, 82, 0.1);
+    }
+
+    .showcase-card h3 {
+        color: #1e293b;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* تأثير حاوية الصور والفيديو والـ 3D */
+    .showcase-media {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.08);
+        background-color: #e2e8f0; 
+        margin-bottom: 25px;
+        height: 350px; /* توحيد الطول عشان الشكل يبقى متناسق */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* إعدادات عارض الـ 3D */
+    model-viewer {
+        width: 100%;
+        height: 100%;
+        background-color: #f8fafc;
+        --poster-color: transparent;
+    }
+
+    .showcase-media img, .showcase-media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* لضمان إن الفيديو يملى المساحة بدون تشوه */
+        display: block;
+    }
+
+    .showcase-card p {
+        color: #64748b;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        text-align: center;
+    }
+
+    .scroll-fade {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .scroll-fade.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .typing-text { font-size: 2rem; }
+        .gateway-wrapper { min-height: 85vh; border-radius: 20px; }
+        .btn-glow { width: 100%; margin-bottom: 10px; }
+        .showcase-title { font-size: 2rem; }
+        .showcase-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+    }
+</style>
+
+<div class="container">
+    
+    <div class="gateway-wrapper">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+
+        <div class="gateway-content">
+            <div class="typing-container">
+                <h1 class="typing-text" id="typingElement"></h1>
+            </div>
+            
+            <p class="subtitle fade-in-delay-1">
+                Experience seamless real-time translation between text, voice, and sign language powered by advanced AI and intelligent 3D avatars.
+            </p>
+
+            <div class="action-buttons fade-in-delay-2">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'chat:chat_list' %}" class="btn btn-glow btn-primary-glow text-decoration-none">
+                        Enter Workspace 🚀
+                    </a>
+                {% else %}
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="{% url 'accounts:login' %}" class="btn btn-glow btn-primary-glow text-decoration-none">
+                            Login to Connect
+                        </a>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-glow btn-outline-glow text-decoration-none">
+                            Create Account
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="showcase-section">
+        <h2 class="showcase-title scroll-fade">ASL Gestures in Action</h2>
+
+        <div class="showcase-grid">
+            
+            <div class="showcase-card scroll-fade">
+                <h3>🤖 Interactive 3D Avatar</h3>
+                <div class="showcase-media">
+                    <model-viewer 
+                        src="{% static 'images/avatar_demo.glb' %}" 
+                        alt="A 3D model of our Sign Language Avatar" 
+                        auto-rotate 
+                        camera-controls 
+                        autoplay
+                        shadow-intensity="1">
+                    </model-viewer>
+                </div>
+                <p>
+                    Interact with our live 3D Avatar. You can rotate and zoom to see the exact hand movements from any angle.
+                </p>
+            </div>
+
+            <div class="showcase-card scroll-fade">
+                <h3>🎥 Real-Time Recognition</h3>
+                <div class="showcase-media">
+                    <video autoplay loop muted playsinline>
+                        <source src="{% static 'images/real_person_hello.mp4' %}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <p>
+                    Sign naturally in front of your camera, and our AI tracks and analyzes your gestures to instantly display the text.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        // 1. Typing Effect Logic
+        const textToType = "Welcome to the Future of Sign Language.";
+        const typingElement = document.getElementById('typingElement');
+        let index = 0;
+
+        function typeWriter() {
+            if (index < textToType.length) {
+                typingElement.innerHTML += textToType.charAt(index);
+                index++;
+                setTimeout(typeWriter, 50); 
+            } else {
+                typingElement.style.borderRightColor = "rgba(0, 169, 145, 0.5)";
+            }
+        }
+        setTimeout(typeWriter, 500);
+
+        // 2. Scroll Animation Logic
+        const fadeElements = document.querySelectorAll('.scroll-fade');
+        const scrollObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        fadeElements.forEach(el => scrollObserver.observe(el));
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+
+<div class="container py-3">
+  <div class="wa-chat">
+
+    <div class="wa-header">
+      
+      <div class="header-left">
+        <img src="{% if other_user.user_profile.profile_image %}{{ other_user.user_profile.profile_image.url }}{% else %}{% static 'img/default.png' %}{% endif %}" 
+             class="partner-avatar">
+        
+        <div class="header-info">
+          <div class="name">{{ other_user.username|default:"مستخدم"|title }}</div>
+          <div id="userStatus" class="status">Offline</div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <img src="{{ request.user.user_profile.profile_image.url }}" 
+             id="profilePic" 
+             class="my-profile-pic" 
+             title="تغيير صورتي">
+
+        <div class="menu-container">
+          <button id="menuBtn" class="menu-btn">⋮</button>
+          
+          <div id="menuBox" class="menu-dropdown">
+            <button id="clearChat" class="menu-item text-danger">
+              🗑️ مسح المحادثة
+            </button>
+            <button class="menu-item" onclick="location.reload()">
+              🔄 تحديث الصفحة
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="waMessages" class="wa-messages">
+      <div class="wa-day">اليوم</div>
+      </div>
+
+    <div class="wa-input">
+      <textarea id="msgBox" class="form-control" placeholder="اكتب رسالة..." rows="1"></textarea>
+      
+      <button id="openCamBtn" class="btn btn-link text-secondary p-1" style="font-size:20px">📷</button>
+      <input id="fileInput" type="file" accept="image/*" class="d-none">
+      <button id="uploadBtn" class="btn btn-link text-secondary p-1" style="font-size:20px">📎</button>
+      
+      <button id="sendBtn" class="btn-send">➤</button>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

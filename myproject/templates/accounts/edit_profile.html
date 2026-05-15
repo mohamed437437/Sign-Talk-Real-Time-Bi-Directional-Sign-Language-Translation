@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h4 mb-3">Edit Profile</h2>
+          <p class="text-muted mb-4">Update your username, email, and profile picture.</p>
+
+          <!-- Profile picture -->
+          <div class="text-center mb-4">
+            <img
+              src="{{ user.profile.profile_image.url }}"
+              alt="Profile picture"
+              class="rounded-circle shadow"
+              width="110" height="110"
+              style="object-fit:cover"
+              
+            >
+          </div>
+
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="mb-3">
+              <label class="form-label">{{ form.username.label }}</label>
+              {{ form.username }}
+              {% if form.username.errors %}
+                <div class="text-danger small mt-1">
+                  {% for error in form.username.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label">{{ form.email.label }}</label>
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="text-danger small mt-1">
+                  {% for error in form.email.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Profile image -->
+            <div class="mb-4">
+              <label class="form-label">{{ form.profile_image.label }}</label>
+              {{ form.profile_image }}
+              {% if form.profile_image.errors %}
+                <div class="text-danger small mt-1">
+                  {% for error in form.profile_image.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+              {% endif %}
+              <div class="form-text">PNG or JPG is recommended.</div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">Update</button>
+              <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-center mt-3">
+        <small class="text-muted">Changes take effect immediately after saving.</small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
